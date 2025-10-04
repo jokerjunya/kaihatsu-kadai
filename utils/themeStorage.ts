@@ -1,8 +1,10 @@
 import { User, AppState, STORAGE_KEYS } from '@/types/theme';
 import { getTotalQuadrantTasks } from '@/utils/themeData';
+import FirestoreProgressManager from '@/utils/firestoreManager';
 
-// テーマベースのローカルストレージ管理クラス
+// テーマベースのローカルストレージ管理クラス（Firestore連携対応）
 class ThemeStorageManager {
+  private static isFirestoreEnabled = true; // Firestore使用フラグ
   // データを安全に取得する
   private static safeGetItem(key: string): string | null {
     if (typeof window === 'undefined') return null;
@@ -72,15 +74,27 @@ class ThemeStorageManager {
   }
 
   // 特定レベルの完了状態を更新
-  static completeQuadrant(themeId: string, quadrant: string): boolean {
+  static async completeQuadrant(themeId: string, quadrant: string): Promise<boolean> {
+    // Firestore連携
+    if (this.isFirestoreEnabled) {
+      const user = this.getCurrentUser();
+      if (user) {
+        const success = await FirestoreProgressManager.completeLevel(user.id, themeId, quadrant);
+        if (!success) {
+          console.warn('Firestore更新に失敗、ローカルストレージにフォールバック');
+        }
+      }
+    }
+
+    // ローカルストレージ更新（フォールバック含む）
     const currentProgress = this.getThemeProgress();
-    
+
     if (!currentProgress[themeId]) {
       currentProgress[themeId] = {};
     }
-    
+
     currentProgress[themeId][quadrant] = true;
-    
+
     // ユーザーの完了タスクリストも更新
     const user = this.getCurrentUser();
     if (user) {
@@ -90,19 +104,31 @@ class ThemeStorageManager {
         this.setCurrentUser(user);
       }
     }
-    
+
     return this.setThemeProgress(currentProgress);
   }
 
   // 特定レベルを未完了状態に戻す
-  static uncompleteQuadrant(themeId: string, quadrant: string): boolean {
+  static async uncompleteQuadrant(themeId: string, quadrant: string): Promise<boolean> {
     try {
+      // Firestore連携
+      if (this.isFirestoreEnabled) {
+        const user = this.getCurrentUser();
+        if (user) {
+          const success = await FirestoreProgressManager.uncompleteLevel(user.id, themeId, quadrant);
+          if (!success) {
+            console.warn('Firestore更新に失敗、ローカルストレージにフォールバック');
+          }
+        }
+      }
+
+      // ローカルストレージ更新（フォールバック含む）
       const currentProgress = this.getThemeProgress();
-      
+
       if (currentProgress[themeId]) {
         currentProgress[themeId][quadrant] = false;
       }
-      
+
       // ユーザーの完了タスクリストからも削除
       const user = this.getCurrentUser();
       if (user) {
@@ -113,10 +139,10 @@ class ThemeStorageManager {
           this.setCurrentUser(user);
         }
       }
-      
+
       // 完了履歴からも削除
       this.removeFromCompletedHistory(themeId, quadrant);
-      
+
       return this.setThemeProgress(currentProgress);
     } catch (error) {
       console.error('未完了処理エラー:', error);
@@ -239,6 +265,99 @@ class ThemeStorageManager {
       return true;
     } catch (error) {
       console.error('全データ削除エラー:', error);
+      return false;
+    }
+  }
+
+  // Firestoreからローカルストレージへの初期同期
+  static async syncFromFirestore(userId: string): Promise<boolean> {
+    if (!this.isFirestoreEnabled) return false;
+
+    try {
+      const firestoreData = await FirestoreProgressManager.getUserProgress(userId);
+      if (!firestoreData) return false;
+
+      // ローカルストレージを更新
+      const progress: { [themeId: string]: { [quadrant: string]: boolean } } = {};
+      const completedHistory: any[] = [];
+
+      firestoreData.completedTasks.forEach(task => {
+        if (!progress[task.themeId]) {
+          progress[task.themeId] = {};
+        }
+        progress[task.themeId][task.level] = true;
+
+        completedHistory.push({
+          themeId: task.themeId,
+          quadrant: task.level,
+          completedAt: task.completedAt.toISOString()
+        });
+      });
+
+      // ローカルストレージを更新
+      this.setThemeProgress(progress);
+      this.safeSetItem(STORAGE_KEYS.COMPLETED_QUADRANTS, JSON.stringify(completedHistory));
+
+      // ユーザー情報も更新
+      const user: User = {
+        id: userId,
+        completedTasks: firestoreData.completedTasks.map(task => task.taskId)
+      };
+      this.setCurrentUser(user);
+
+      console.log('Firestoreからローカルストレージへの同期が完了しました');
+      return true;
+    } catch (error) {
+      console.error('Firestore同期エラー:', error);
+      return false;
+    }
+  }
+
+  // ローカルストレージからFirestoreへの移行
+  static async migrateToFirestore(userId: string): Promise<boolean> {
+    if (!this.isFirestoreEnabled) return false;
+
+    try {
+      const success = await FirestoreProgressManager.migrateFromLocalStorage(userId);
+      if (success) {
+        console.log('ローカルストレージからFirestoreへの移行が完了しました');
+        // ログイン時刻も更新
+        await FirestoreProgressManager.updateLastLogin(userId);
+      }
+      return success;
+    } catch (error) {
+      console.error('Firestore移行エラー:', error);
+      return false;
+    }
+  }
+
+  // ユーザー初期化（新規登録 or 既存ユーザーの同期）
+  static async initializeUser(userId: string): Promise<boolean> {
+    if (!this.isFirestoreEnabled) return true;
+
+    try {
+      // Firestoreでユーザーの存在確認
+      const existingUser = await FirestoreProgressManager.getUserProgress(userId);
+      
+      if (existingUser) {
+        // 既存ユーザー: Firestoreからローカルストレージに同期
+        await this.syncFromFirestore(userId);
+        await FirestoreProgressManager.updateLastLogin(userId);
+      } else {
+        // 新規ユーザー: ローカルストレージがあれば移行、なければ新規作成
+        const localUser = this.getCurrentUser();
+        if (localUser && localUser.completedTasks.length > 0) {
+          // ローカルデータがある場合は移行
+          await this.migrateToFirestore(userId);
+        } else {
+          // 完全に新規の場合
+          await FirestoreProgressManager.createUser(userId);
+        }
+      }
+
+      return true;
+    } catch (error) {
+      console.error('ユーザー初期化エラー:', error);
       return false;
     }
   }

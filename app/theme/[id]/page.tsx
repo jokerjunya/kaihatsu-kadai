@@ -15,7 +15,7 @@ export default function ThemeDetailPage() {
   const [activeQuadrant, setActiveQuadrant] = useState<string>('bottom-left');
   const [isLoading, setIsLoading] = useState(true);
   const [showHintPopup, setShowHintPopup] = useState(false);
-  const [currentHint, setCurrentHint] = useState<{title: string, hint: any} | null>(null);
+  const [currentHint, setCurrentHint] = useState<{title: string, hint: unknown} | null>(null);
   const router = useRouter();
   const params = useParams();
   const themeId = params.id as string;
@@ -45,12 +45,12 @@ export default function ThemeDetailPage() {
 
     try {
       console.log('未完了処理開始:', { themeId: theme.id, quadrant });
-      
+
       // レベルを未完了状態に戻す
-      const success = ThemeStorageManager.uncompleteQuadrant(theme.id, quadrant);
-      
+      const success = await ThemeStorageManager.uncompleteQuadrant(theme.id, quadrant);
+
       console.log('未完了処理結果:', success);
-      
+
       if (success) {
         // ページをリロードして状態を更新
         window.location.reload();
@@ -69,12 +69,12 @@ export default function ThemeDetailPage() {
 
     try {
       // レベルを完了状態に更新
-      const success = ThemeStorageManager.completeQuadrant(theme.id, quadrant);
-      
+      const success = await ThemeStorageManager.completeQuadrant(theme.id, quadrant);
+
       if (success) {
         // 完了履歴に追加
         ThemeStorageManager.addCompletedTaskToHistory(theme.id, quadrant);
-        
+
         // 完了画面へ遷移（既存のフローを活用）
         router.push(`/theme/${theme.id}/${quadrant}/complete`);
       } else {
@@ -86,7 +86,7 @@ export default function ThemeDetailPage() {
     }
   };
 
-  const handleShowHint = (taskTitle: string, hint: any) => {
+  const handleShowHint = (taskTitle: string, hint: unknown) => {
     setCurrentHint({ title: taskTitle, hint });
     setShowHintPopup(true);
   };

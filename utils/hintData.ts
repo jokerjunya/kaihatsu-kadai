@@ -132,6 +132,6 @@ export const sampleHints: { [taskId: string]: TaskHint } = {
 };
 
 // ヒントデータを取得する関数
-export const getTaskHint = (taskId: string): TaskHint | null => {
-  return sampleHints[taskId] || null;
+export const getTaskHint = (taskId: string): TaskHint | undefined => {
+  return sampleHints[taskId] || undefined;
 };

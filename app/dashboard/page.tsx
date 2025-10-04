@@ -13,18 +13,25 @@ export default function DashboardPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // ユーザー認証チェック
-    const user = ThemeStorageManager.getCurrentUser();
-    if (!user) {
-      router.push('/');
-      return;
-    }
+    const initializeUser = async () => {
+      // ユーザー認証チェック
+      const user = ThemeStorageManager.getCurrentUser();
+      if (!user) {
+        router.push('/');
+        return;
+      }
 
-    // 既存データからの移行を実行
-    ThemeStorageManager.migrateFromOldData();
-    
-    setCurrentUser(user);
-    setIsLoading(false);
+      // Firestore連携の初期化
+      await ThemeStorageManager.initializeUser(user.id);
+
+      // 既存データからの移行を実行
+      ThemeStorageManager.migrateFromOldData();
+
+      setCurrentUser(user);
+      setIsLoading(false);
+    };
+
+    initializeUser();
   }, [router]);
 
   const handleLogout = () => {
