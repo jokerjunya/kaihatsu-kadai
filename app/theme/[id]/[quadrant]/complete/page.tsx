@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ThemeStorageManager from '@/utils/themeStorage';
-import { getThemeById, getQuadrantTask } from '@/utils/themeData';
+import { getThemeByIdSafe, getQuadrantTaskSafe } from '@/utils/themeData';
 import { User, Theme } from '@/types/theme';
 import { QUADRANT_CONFIG } from '@/types/theme';
 
@@ -26,8 +26,8 @@ export default function QuadrantCompletePage() {
       return;
     }
 
-    // テーマの存在チェック
-    const foundTheme = getThemeById(themeId);
+    // テーマの取得（安全な関数を使用）
+    const foundTheme = getThemeByIdSafe(themeId);
     if (!foundTheme) {
       router.push('/dashboard');
       return;
@@ -65,7 +65,7 @@ export default function QuadrantCompletePage() {
     );
   }
 
-  const quadrantTask = theme.quadrants[quadrant as keyof typeof theme.quadrants];
+  const quadrantTask = getQuadrantTaskSafe(themeId, quadrant);
   const quadrantConfig = QUADRANT_CONFIG[quadrant as keyof typeof QUADRANT_CONFIG];
   const completedCount = ThemeStorageManager.getThemeCompletedCount(themeId);
   const totalCompleted = ThemeStorageManager.getTotalCompletedCount();
@@ -116,23 +116,6 @@ export default function QuadrantCompletePage() {
             <span className="text-sm">{theme.icon} {theme.title}</span>
             <span>•</span>
             <span className="text-sm">{quadrantConfig.name}</span>
-          </div>
-        </div>
-
-        {/* 完了した課題の詳細 */}
-        <div className="bg-white border border-gray-200 rounded-xl p-8 mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            完了した実装内容
-          </h2>
-          <div className="bg-gray-50 rounded-lg p-4 mb-4">
-            <h3 className="font-medium text-gray-800 mb-2">{quadrantTask.title}</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              {quadrantTask.description}
-            </p>
-          </div>
-          <div className="text-sm text-gray-500">
-            実際の開発では、この機能を段階的に実装していきます。
-            基本的な動作から高度な機能まで、着実にスキルアップしていきましょう！
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import ThemeStorageManager from '@/utils/themeStorage';
-import { getThemeById } from '@/utils/themeData';
+import { getThemeByIdSafe, validateThemeData, getAdvancedTaskHint } from '@/utils/themeData';
 import { Theme, User } from '@/types/theme';
 import { QUADRANT_CONFIG } from '@/types/theme';
 import HintPopup from '@/components/HintPopup';
@@ -21,23 +21,37 @@ export default function ThemeDetailPage() {
   const themeId = params.id as string;
 
   useEffect(() => {
-    // ユーザー認証チェック
-    const user = ThemeStorageManager.getCurrentUser();
-    if (!user) {
-      router.push('/');
-      return;
-    }
+    const initializePage = async () => {
+      try {
+        // データ検証
+        const validation = validateThemeData();
+        if (!validation.isValid) {
+          console.warn('テーマデータに問題があります:', validation.errors);
+        }
+        
+        // ユーザー認証チェック
+        const user = ThemeStorageManager.getCurrentUser();
+        if (!user) {
+          router.push('/');
+          return;
+        }
 
-    // テーマの存在チェック
-    const foundTheme = getThemeById(themeId);
-    if (!foundTheme) {
-      router.push('/dashboard');
-      return;
-    }
+        // テーマの取得（安全な関数を使用）
+        const foundTheme = getThemeByIdSafe(themeId);
+        
+        setCurrentUser(user);
+        setTheme(foundTheme);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('ページ初期化エラー:', error);
+        // エラーが発生してもフォールバックで表示を継続
+        setIsLoading(false);
+      }
+    };
 
-    setCurrentUser(user);
-    setTheme(foundTheme);
-    setIsLoading(false);
+    if (themeId) {
+      initializePage();
+    }
   }, [themeId, router]);
 
   const handleUncompleteQuadrant = async (quadrant: string) => {
@@ -68,12 +82,25 @@ export default function ThemeDetailPage() {
     if (!theme || !currentUser) return;
 
     try {
+      console.log('レベル完了処理開始:', { 
+        userId: currentUser.id, 
+        themeId: theme.id, 
+        quadrant 
+      });
+
       // レベルを完了状態に更新
       const success = await ThemeStorageManager.completeQuadrant(theme.id, quadrant);
+      console.log('完了処理結果:', success);
 
       if (success) {
         // 完了履歴に追加
-        ThemeStorageManager.addCompletedTaskToHistory(theme.id, quadrant);
+        const historySuccess = ThemeStorageManager.addCompletedTaskToHistory(theme.id, quadrant);
+        console.log('履歴追加結果:', historySuccess);
+
+        // 進捗確認
+        const progress = ThemeStorageManager.getThemeProgress(currentUser.id);
+        const isCompleted = ThemeStorageManager.isQuadrantCompleted(theme.id, quadrant);
+        console.log('完了後の状態:', { progress, isCompleted });
 
         // 完了画面へ遷移（既存のフローを活用）
         router.push(`/theme/${theme.id}/${quadrant}/complete`);
@@ -86,9 +113,25 @@ export default function ThemeDetailPage() {
     }
   };
 
-  const handleShowHint = (taskTitle: string, hint: unknown) => {
-    setCurrentHint({ title: taskTitle, hint });
-    setShowHintPopup(true);
+  const handleShowHint = (taskTitle: string, taskId: string) => {
+    try {
+      // 高度なヒント取得（フォールバック + 動的生成）
+      const hint = getAdvancedTaskHint(taskId, taskTitle);
+      setCurrentHint({ title: taskTitle, hint });
+      setShowHintPopup(true);
+    } catch (error) {
+      console.error('ヒント表示エラー:', error);
+      // エラー時もフォールバックヒントを表示
+      setCurrentHint({ 
+        title: taskTitle, 
+        hint: {
+          detailed: 'ヒントの読み込みに失敗しました。しばらく時間をおいて再度お試しください。',
+          tips: ['ページを再読み込みしてみてください'],
+          resources: ['サポートにお問い合わせください']
+        }
+      });
+      setShowHintPopup(true);
+    }
   };
 
   const handleCloseHint = () => {
@@ -221,37 +264,31 @@ export default function ThemeDetailPage() {
                   <h2 className="text-2xl font-bold text-gray-800">
                     {task.title}
                   </h2>
-                  {isCompleted && (
-                    <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">
-                      ✓ 完了済み
-                    </span>
-                  )}
+                  <div className="flex items-center space-x-2">
+                    {task.hint && (
+                      <button
+                            onClick={() => handleShowHint(task.title, task.id)}
+                        className="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg
+                                   transition-colors duration-200 flex items-center space-x-1"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        <span>ヒントを表示</span>
+                      </button>
+                    )}
+                    {isCompleted && (
+                      <span className="px-3 py-1 bg-yellow-100 text-yellow-800 text-sm font-medium rounded-full">
+                        ✓ 完了済み
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <p className="text-sm text-gray-500 mb-4">
                   {quadrantConfig.description}
                 </p>
               </div>
 
-              <div className="bg-gray-50 rounded-lg p-6 mb-8">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-gray-800">実装内容</h3>
-                  {task.hint && (
-                    <button
-                      onClick={() => handleShowHint(task.title, task.hint)}
-                      className="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-lg
-                                 transition-colors duration-200 flex items-center space-x-1"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                      </svg>
-                      <span>ヒントを表示</span>
-                    </button>
-                  )}
-                </div>
-                <p className="text-gray-700 leading-relaxed">
-                  {task.description}
-                </p>
-              </div>
 
               {/* アクションボタン */}
               <div className="flex justify-center space-x-4">
@@ -287,7 +324,7 @@ export default function ThemeDetailPage() {
           isOpen={showHintPopup}
           onClose={handleCloseHint}
           taskTitle={currentHint.title}
-          hints={currentHint.hint}
+          hints={currentHint.hint as { detailed: string; tips: string[]; resources: string[]; }}
         />
       )}
     </div>

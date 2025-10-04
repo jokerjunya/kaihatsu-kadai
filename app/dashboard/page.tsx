@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ThemeStorageManager from '@/utils/themeStorage';
-import { themes, getThemesByCategory } from '@/utils/themeData';
+import { themes, getThemesByCategory, validateThemeData, validateHintData } from '@/utils/themeData';
 import { User } from '@/types/theme';
 import { CATEGORY_CONFIG } from '@/types/theme';
 
@@ -14,21 +14,51 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const initializeUser = async () => {
-      // ユーザー認証チェック
-      const user = ThemeStorageManager.getCurrentUser();
-      if (!user) {
-        router.push('/');
-        return;
+      try {
+        // データ整合性チェック
+        console.log('=== データ検証開始 ===');
+        const themeValidation = validateThemeData();
+        const hintValidation = validateHintData();
+        
+        if (!themeValidation.isValid) {
+          console.error('テーマデータエラー:', themeValidation.errors);
+        }
+        
+        if (!hintValidation.isValid) {
+          console.error('ヒントデータエラー:', hintValidation.errors);
+        }
+        
+        if (themeValidation.isValid && hintValidation.isValid) {
+          console.log('✅ 全データ検証完了');
+        }
+        
+        // ユーザー認証チェック
+        const user = ThemeStorageManager.getCurrentUser();
+        if (!user) {
+          router.push('/');
+          return;
+        }
+
+        console.log('ダッシュボード初期化開始:', user.id);
+
+        // Firestore連携の初期化
+        const firestoreSuccess = await ThemeStorageManager.initializeUser(user.id);
+        console.log('Firestore初期化結果:', firestoreSuccess);
+
+        // 既存データからの移行を実行
+        ThemeStorageManager.migrateFromOldData();
+
+        // 進捗データを確認
+        const progress = ThemeStorageManager.getThemeProgress(user.id);
+        const totalCompleted = ThemeStorageManager.getTotalCompletedCount();
+        console.log('現在の進捗:', { progress, totalCompleted });
+
+        setCurrentUser(user);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('ダッシュボード初期化エラー:', error);
+        setIsLoading(false);
       }
-
-      // Firestore連携の初期化
-      await ThemeStorageManager.initializeUser(user.id);
-
-      // 既存データからの移行を実行
-      ThemeStorageManager.migrateFromOldData();
-
-      setCurrentUser(user);
-      setIsLoading(false);
     };
 
     initializeUser();
@@ -41,7 +71,7 @@ export default function DashboardPage() {
 
   // 全体統計の計算
   const totalCompleted = ThemeStorageManager.getTotalCompletedCount();
-  const totalTasks = themes.length * 4; // 10 themes × 4 levels
+  const totalTasks = themes.length * 4; // 9 themes × 4 levels
   const completionRate = ThemeStorageManager.getTotalCompletionRate();
 
   // 最近完了したタスクの取得

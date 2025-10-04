@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import ThemeStorageManager from '@/utils/themeStorage';
-import { getThemeById } from '@/utils/themeData';
+import { getThemeByIdSafe } from '@/utils/themeData';
 import { getEnhancedTask, getTierLabels, getTierStyle } from '@/utils/enhancedTaskData';
 import TaskLevelManager, { TaskLevel } from '@/utils/taskLevelManager';
 import { Theme, User, EnhancedQuadrantTask, TaskTier } from '@/types/theme';
@@ -37,8 +37,8 @@ export default function EnhancedTaskDetailPage() {
     }
     console.log('現在のユーザー:', user);
 
-    // テーマの存在チェック
-    const foundTheme = getThemeById(themeId);
+    // テーマの取得（安全な関数を使用）
+    const foundTheme = getThemeByIdSafe(themeId);
     if (!foundTheme) {
       console.log('テーマが見つかりません:', themeId);
       router.push('/dashboard');

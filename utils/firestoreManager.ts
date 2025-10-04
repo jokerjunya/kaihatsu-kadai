@@ -31,7 +31,8 @@ export class FirestoreProgressManager {
   }
 
   // 日付をFirestoreタイムスタンプに変換
-  private static dateToTimestamp(date: Date): any {
+  // 日付をFirestoreタイムスタンプに変換
+  private static dateToTimestamp(date: Date): Timestamp {
     return Timestamp.fromDate(date);
   }
 
@@ -44,8 +45,7 @@ export class FirestoreProgressManager {
         themeId: task.themeId,
         level: task.level,
         levelName: task.levelName,
-        completedAt: this.timestampToDate(task.completedAt),
-        difficulty: task.difficulty
+        completedAt: this.timestampToDate(task.completedAt)
       })),
       lastLogin: this.timestampToDate(firestoreData.lastLogin),
       createdAt: this.timestampToDate(firestoreData.createdAt),
@@ -64,13 +64,12 @@ export class FirestoreProgressManager {
         themeId: task.themeId,
         level: task.level,
         levelName: task.levelName,
-        completedAt: this.dateToTimestamp(task.completedAt),
-        difficulty: task.difficulty
+        completedAt: Timestamp.fromDate(task.completedAt)
       }));
     }
-    if (data.lastLogin) result.lastLogin = this.dateToTimestamp(data.lastLogin);
-    if (data.createdAt) result.createdAt = this.dateToTimestamp(data.createdAt);
-    if (data.updatedAt) result.updatedAt = this.dateToTimestamp(data.updatedAt);
+    if (data.lastLogin) result.lastLogin = Timestamp.fromDate(data.lastLogin);
+    if (data.createdAt) result.createdAt = Timestamp.fromDate(data.createdAt);
+    if (data.updatedAt) result.updatedAt = Timestamp.fromDate(data.updatedAt);
     
     return result;
   }
@@ -94,15 +93,16 @@ export class FirestoreProgressManager {
   }
 
   // 新規ユーザーを作成
+  // 新規ユーザーを作成
   static async createUser(userId: string): Promise<boolean> {
     try {
       const now = new Date();
       const userData: FirestoreUserData = {
         id: userId,
         completedTasks: [],
-        lastLogin: this.dateToTimestamp(now),
-        createdAt: this.dateToTimestamp(now),
-        updatedAt: this.dateToTimestamp(now)
+        lastLogin: Timestamp.fromDate(now),
+        createdAt: Timestamp.fromDate(now),
+        updatedAt: Timestamp.fromDate(now)
       };
 
       const docRef = doc(db, this.COLLECTION_NAME, userId);
@@ -116,12 +116,13 @@ export class FirestoreProgressManager {
   }
 
   // ログイン時刻を更新
+  // ログイン時刻を更新
   static async updateLastLogin(userId: string): Promise<boolean> {
     try {
       const docRef = doc(db, this.COLLECTION_NAME, userId);
       await updateDoc(docRef, {
-        lastLogin: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        lastLogin: Timestamp.now(),
+        updatedAt: Timestamp.now()
       });
       
       return true;
@@ -131,6 +132,7 @@ export class FirestoreProgressManager {
     }
   }
 
+  // レベル完了を記録
   // レベル完了を記録
   static async completeLevel(userId: string, themeId: string, level: string): Promise<boolean> {
     try {
@@ -142,13 +144,13 @@ export class FirestoreProgressManager {
         themeId,
         level,
         levelName: levelConfig?.name || level,
-        completedAt: serverTimestamp(),
+        completedAt: Timestamp.now()
       };
 
       const docRef = doc(db, this.COLLECTION_NAME, userId);
       await updateDoc(docRef, {
         completedTasks: arrayUnion(completedTask),
-        updatedAt: serverTimestamp()
+        updatedAt: Timestamp.now()
       });
       
       return true;
@@ -158,6 +160,7 @@ export class FirestoreProgressManager {
     }
   }
 
+  // レベル完了を取り消し
   // レベル完了を取り消し
   static async uncompleteLevel(userId: string, themeId: string, level: string): Promise<boolean> {
     try {
@@ -177,14 +180,13 @@ export class FirestoreProgressManager {
         themeId: taskToRemove.themeId,
         level: taskToRemove.level,
         levelName: taskToRemove.levelName,
-        completedAt: this.dateToTimestamp(taskToRemove.completedAt),
-        difficulty: taskToRemove.difficulty
+        completedAt: Timestamp.fromDate(taskToRemove.completedAt)
       };
 
       const docRef = doc(db, this.COLLECTION_NAME, userId);
       await updateDoc(docRef, {
         completedTasks: arrayRemove(firestoreTask),
-        updatedAt: serverTimestamp()
+        updatedAt: Timestamp.now()
       });
       
       return true;
@@ -230,7 +232,7 @@ export class FirestoreProgressManager {
           themeId: item.themeId,
           level: item.quadrant,
           levelName: levelConfig?.name || item.quadrant,
-          completedAt: new Date(item.completedAt),
+          completedAt: new Date(item.completedAt)
         };
       });
 
@@ -243,12 +245,11 @@ export class FirestoreProgressManager {
           themeId: task.themeId,
           level: task.level,
           levelName: task.levelName,
-          completedAt: this.dateToTimestamp(task.completedAt),
-          difficulty: task.difficulty
+          completedAt: Timestamp.fromDate(task.completedAt) // 日付をTimestampに変換
         })),
-        lastLogin: this.dateToTimestamp(now),
-        createdAt: this.dateToTimestamp(now),
-        updatedAt: this.dateToTimestamp(now)
+        lastLogin: Timestamp.fromDate(now),
+        createdAt: Timestamp.fromDate(now),
+        updatedAt: Timestamp.fromDate(now)
       };
 
       const docRef = doc(db, this.COLLECTION_NAME, userId);

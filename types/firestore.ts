@@ -13,7 +13,6 @@ export interface CompletedTask {
   level: string;         // "bottom-left"
   levelName: string;     // "レベル1"
   completedAt: Date;
-  difficulty?: string;   // 将来の拡張用
 }
 
 // Firestore変換用のヘルパー型
@@ -23,7 +22,6 @@ export interface FirestoreCompletedTask {
   level: string;
   levelName: string;
   completedAt: any; // Firestore Timestamp
-  difficulty?: string;
 }
 
 export interface FirestoreUserData {
