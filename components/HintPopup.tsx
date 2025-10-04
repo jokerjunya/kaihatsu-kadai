@@ -7,7 +7,6 @@ interface HintPopupProps {
   onClose: () => void;
   taskTitle: string;
   hints: {
-    detailed: string;
     tips: string[];
     resources: string[];
   };
@@ -47,18 +46,6 @@ export default function HintPopup({ isOpen, onClose, taskTitle, hints }: HintPop
 
           {/* コンテンツ */}
           <div className="p-6 space-y-6">
-            {/* 詳細説明 */}
-            <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                📋 詳細な実装指針
-              </h4>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-gray-700 leading-relaxed">
-                  {hints.detailed}
-                </p>
-              </div>
-            </div>
-
             {/* 実装のコツ */}
             <div>
               <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">

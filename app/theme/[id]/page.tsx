@@ -125,7 +125,6 @@ export default function ThemeDetailPage() {
       setCurrentHint({ 
         title: taskTitle, 
         hint: {
-          detailed: 'ヒントの読み込みに失敗しました。しばらく時間をおいて再度お試しください。',
           tips: ['ページを再読み込みしてみてください'],
           resources: ['サポートにお問い合わせください']
         }
@@ -324,7 +323,7 @@ export default function ThemeDetailPage() {
           isOpen={showHintPopup}
           onClose={handleCloseHint}
           taskTitle={currentHint.title}
-          hints={currentHint.hint as { detailed: string; tips: string[]; resources: string[]; }}
+          hints={currentHint.hint as { tips: string[]; resources: string[]; }}
         />
       )}
     </div>

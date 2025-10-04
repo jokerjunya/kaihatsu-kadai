@@ -184,7 +184,7 @@ export const themes: Theme[] = [
       'bottom-right': {
         id: 'web-scraping-rpa-br',
         title: 'レベル3',
-        description: '複数のサイトで複数の検索語を実行し、結果をまとめて一覧表示する。',
+        description: '複数のサイトで複数の検索語を実行し、結果をまとめて一覧表示する。💡ワンポイント：ブラウザ操作には Playwright / Puppeteer が活用できる。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-br')
       },
@@ -353,7 +353,7 @@ export const themes: Theme[] = [
       }
     }
   }
-];
+];;
 
 // カテゴリ別にテーマを取得する関数
 export const getThemesByCategory = (category: 'information' | 'tools-rpa' | 'games'): Theme[] => {
@@ -481,9 +481,6 @@ export const validateHintData = (): { isValid: boolean; errors: string[] } => {
           errors.push(`ヒントが見つかりません: ${task.id} (${theme.title} - ${quadrant})`);
         } else {
           // ヒントの内容検証
-          if (!hint.detailed || hint.detailed.length < 10) {
-            errors.push(`ヒントの詳細が不足: ${task.id}`);
-          }
           if (!hint.tips || hint.tips.length === 0) {
             errors.push(`ヒントのコツが不足: ${task.id}`);
           }
@@ -543,7 +540,6 @@ const defaultTheme: Theme = {
 };
 
 const defaultHint: TaskHint = {
-  detailed: 'このタスクの詳細情報は現在利用できません。',
   tips: ['管理者にお問い合わせください'],
   resources: ['システム管理者']
 };
@@ -573,11 +569,6 @@ export const getQuadrantTaskSafe = (themeId: string, quadrant: string): Quadrant
 export const generateDynamicHint = (taskId: string, fallbackTitle: string): TaskHint => {
   // 基本的なヒントテンプレート
   const templates = {
-    detailed: [
-      `${fallbackTitle}を実装する際の詳細な手順を以下に示します。`,
-      `この課題では${fallbackTitle}の機能を段階的に構築していきます。`,
-      `${fallbackTitle}の開発において重要なポイントを整理しました。`
-    ],
     tips: [
       'まずは最小限の機能から始めましょう',
       'ユーザーの使いやすさを考慮して設計しましょう',
@@ -593,7 +584,6 @@ export const generateDynamicHint = (taskId: string, fallbackTitle: string): Task
   };
 
   return {
-    detailed: templates.detailed[Math.floor(Math.random() * templates.detailed.length)],
     tips: templates.tips.slice(0, 3),
     resources: templates.resources.slice(0, 3)
   };

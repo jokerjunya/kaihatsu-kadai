@@ -2,7 +2,6 @@
 
 // ヒントシステム用の型定義
 export interface TaskHint {
-  detailed: string; // 詳細な実装指針
   tips: string[]; // 実装のコツ（3-5項目）
   resources: string[]; // 参考リソース（3-5項目）
 }
