@@ -1,9 +1,9 @@
 import { Theme, QuadrantTask, TaskHint } from '@/types/theme';
 import { getTaskHint } from './hintData';
 
-// 9課題テーマのサンプルデータ
+// 9課題テーマのサンプルデータ（最終版・指定順序）
 export const themes: Theme[] = [
-  // 🎮 ゲーム/遊び系
+  // 1. 割り勘アプリ（傾斜機能付き）
   {
     id: 'bill-splitter',
     title: '割り勘アプリ（傾斜機能付き）',
@@ -41,6 +41,8 @@ export const themes: Theme[] = [
       }
     }
   },
+
+  // 2. オセロ（リバーシ）
   {
     id: 'othello-game',
     title: 'オセロ（リバーシ）',
@@ -50,7 +52,7 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'othello-game-bl',
-        title: '2人交互対戦・石ひっくり返し',
+        title: '2人対戦・石をひっくり返す処理',
         description: '2人で交互に石を置いて遊べる盤面。石をひっくり返す処理を含む。',
         isCompleted: false,
         hint: getTaskHint('othello-game-bl')
@@ -79,11 +81,11 @@ export const themes: Theme[] = [
     }
   },
 
-  // 🔧 ツール/RPA系
+  // 3. ファイル整理ツール
   {
     id: 'file-organizer',
     title: 'ファイル整理ツール',
-    description: '散らかったファイルを自動整理！デスクトップがスッキリ片付く',
+    description: '散らかったファイルを自動整理！効率的なデジタル整理術',
     category: 'tools-rpa',
     icon: '📁',
     quadrants: {
@@ -96,14 +98,14 @@ export const themes: Theme[] = [
       },
       'top-left': {
         id: 'file-organizer-tl',
-        title: 'サイズ・日付による分類条件',
+        title: '分類条件の拡張（サイズ・日付）',
         description: '分類条件に大きさや作成日を加えられるようにする。',
         isCompleted: false,
         hint: getTaskHint('file-organizer-tl')
       },
       'bottom-right': {
         id: 'file-organizer-br',
-        title: '外部サービス連携',
+        title: '外部サービス連携・送信機能',
         description: '整理したファイルを外のサービスに送れるようにする。',
         isCompleted: false,
         hint: getTaskHint('file-organizer-br')
@@ -117,16 +119,18 @@ export const themes: Theme[] = [
       }
     }
   },
+
+  // 4. カレンダー連携ToDo
   {
     id: 'calendar-todo',
     title: 'カレンダー連携ToDo',
-    description: 'タスクと予定を一元管理！時間を味方につける生産性アプリ',
+    description: 'スケジュールと一体化！時間を味方につけるタスク管理',
     category: 'tools-rpa',
     icon: '📅',
     quadrants: {
       'bottom-left': {
         id: 'calendar-todo-bl',
-        title: 'タスクの追加・削除・完了チェック',
+        title: 'タスク追加・削除・完了チェック',
         description: 'タスクを追加・削除できるリスト。完了したものにはチェックを付けられる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-bl')
@@ -140,26 +144,28 @@ export const themes: Theme[] = [
       },
       'bottom-right': {
         id: 'calendar-todo-br',
-        title: '予定表連携・スケジュール統合',
+        title: 'スケジュール連携・予定表登録',
         description: 'タスクが予定表に登録され、スケジュールとつながる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-br')
       },
       'top-right': {
         id: 'calendar-todo-tr',
-        title: '習慣タスク・通知機能',
+        title: '習慣タスク・通知・リマインド',
         description: '習慣タスクを登録し、連続達成数を表示。通知でリマインドもできる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-tr')
       }
     }
   },
+
+  // 5. WebスクレイピングRPA
   {
     id: 'web-scraping-rpa',
     title: 'WebスクレイピングRPA',
-    description: 'Webの情報を自動収集！手作業を劇的に効率化するボット',
+    description: 'ウェブを自動操縦！情報収集の新しいカタチ',
     category: 'tools-rpa',
-    icon: '🕷️',
+    icon: '🤖',
     quadrants: {
       'bottom-left': {
         id: 'web-scraping-rpa-bl',
@@ -170,21 +176,21 @@ export const themes: Theme[] = [
       },
       'top-left': {
         id: 'web-scraping-rpa-tl',
-        title: '複数要素の抽出・別々表示',
+        title: '複数要素の抽出・分別表示',
         description: '結果の中からタイトルや内容など、複数の要素を取り出して別々に表示する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-tl')
       },
       'bottom-right': {
         id: 'web-scraping-rpa-br',
-        title: '複数サイト・複数検索語の実行',
+        title: '複数サイト・複数検索語の一括処理',
         description: '複数のサイトで複数の検索語を実行し、結果をまとめて一覧表示する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-br')
       },
       'top-right': {
         id: 'web-scraping-rpa-tr',
-        title: '要約ページ生成機能',
+        title: '要約ビュー生成・テンプレート化',
         description: '取得した情報をもとに、要点をまとめたページ（要約ビュー）を生成する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-tr')
@@ -192,31 +198,31 @@ export const themes: Theme[] = [
     }
   },
 
-  // 📊 情報系
+  // 6. 天気アプリ
   {
     id: 'weather-app',
     title: '天気アプリ',
-    description: '毎日の天気を美しく、便利に確認できるパーソナル気象アプリ',
+    description: '今日の空模様から未来を読む！美しい天気予報アプリ',
     category: 'information',
-    icon: '🌤️',
+    icon: '☀️',
     quadrants: {
       'bottom-left': {
         id: 'weather-app-bl',
-        title: 'ダミー今日の天気表示',
+        title: 'ダミー天気データの表示',
         description: 'ダミーの「今日の天気」を画面に表示する。',
         isCompleted: false,
         hint: getTaskHint('weather-app-bl')
       },
       'top-left': {
         id: 'weather-app-tl',
-        title: '時間ごと気温推移表示',
+        title: '時間別気温推移の表示',
         description: 'ダミーの気温推移を時間ごとに表示し、1日の流れを見せる。',
         isCompleted: false,
         hint: getTaskHint('weather-app-tl')
       },
       'bottom-right': {
         id: 'weather-app-br',
-        title: '場所入力・実際の天気取得',
+        title: '場所指定・実際の天気取得',
         description: '場所を入力すると、その場所の実際の天気が表示される。',
         isCompleted: false,
         hint: getTaskHint('weather-app-br')
@@ -230,10 +236,12 @@ export const themes: Theme[] = [
       }
     }
   },
+
+  // 7. ニュースビューア
   {
     id: 'news-viewer',
     title: 'ニュースビューア',
-    description: '最新ニュースをスマートに読める、自分だけの情報ハブを作ろう',
+    description: '世界の今を手のひらに！カスタマイズ可能なニュースリーダー',
     category: 'information',
     icon: '📰',
     quadrants: {
@@ -246,14 +254,14 @@ export const themes: Theme[] = [
       },
       'top-left': {
         id: 'news-viewer-tl',
-        title: 'お気に入り・あとで読むリスト',
+        title: 'お気に入り機能・あとで読むリスト',
         description: '記事をお気に入りに追加して「あとで読むリスト」にまとめられる。',
         isCompleted: false,
         hint: getTaskHint('news-viewer-tl')
       },
       'bottom-right': {
         id: 'news-viewer-br',
-        title: '検索キーワード・実際の記事取得',
+        title: '検索機能・実際の記事取得',
         description: '検索キーワードを入力すると、実際のウェブ上の記事が取得され一覧表示される。',
         isCompleted: false,
         hint: getTaskHint('news-viewer-br')
@@ -267,81 +275,90 @@ export const themes: Theme[] = [
       }
     }
   },
+
+  // 8. 経営者ダッシュボード
   {
     id: 'manager-dashboard',
     title: '経営者ダッシュボード',
-    description: 'ビジネス指標を一目で把握！データドリブンな意思決定を支援',
+    description: 'データで経営を可視化！意思決定を支援するビジネスツール',
     category: 'information',
-    icon: '📈',
+    icon: '📊',
     quadrants: {
       'bottom-left': {
         id: 'manager-dashboard-bl',
-        title: '数値を表に表示',
+        title: '数値の表形式表示',
         description: '数値を表に表示する（売上、コストなど）。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-bl')
       },
       'top-left': {
         id: 'manager-dashboard-tl',
-        title: '指標ごとグラフ切り替え',
+        title: 'グラフ切り替え表示機能',
         description: '指標ごとにグラフに切り替えて表示できる。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-tl')
       },
       'bottom-right': {
         id: 'manager-dashboard-br',
-        title: '複数数値表の読込・比較',
+        title: '複数データの比較機能',
         description: '複数の数値表を読み込み、同じ指標を比較できる。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-br')
       },
       'top-right': {
         id: 'manager-dashboard-tr',
-        title: 'ダッシュボード配置・全体更新',
+        title: '統合ダッシュボード・自動更新',
         description: '複数の指標をまとめて配置したダッシュボードを作り、更新で全体が最新になる。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-tr')
       }
     }
   },
+
+  // 9. Excel読み取り＋自動処理（ラスボス）
   {
     id: 'excel-automation',
     title: 'Excel読み取り＋自動処理（ラスボス）',
-    description: 'Excel作業を完全自動化！データ処理の新しいスタンダード',
+    description: 'データの魔法使い！Excelを超えた自動処理システム',
     category: 'tools-rpa',
-    icon: '📊',
+    icon: '📈',
     quadrants: {
       'bottom-left': {
         id: 'excel-automation-bl',
-        title: '表データ読込・画面一覧表示',
+        title: 'データ読み込み・一覧表示',
         description: '表のデータを読み込み、そのまま画面に一覧表示できる。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-bl')
       },
       'top-left': {
         id: 'excel-automation-tl',
-        title: '条件付き色付け・集計処理',
+        title: '条件指定・色付け・集計機能',
         description: '条件を決めて色付けや集計を行い、要点を強調した一覧にする。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-tl')
       },
       'bottom-right': {
         id: 'excel-automation-br',
-        title: '複数表読込・突き合わせ',
+        title: '複数表の突き合わせ処理',
         description: '複数の表を読み込み、共通項目で突き合わせて結果を出す。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-br')
       },
       'top-right': {
         id: 'excel-automation-tr',
-        title: 'ダッシュボード化・更新再描画',
+        title: 'ダッシュボード化・自動再描画',
         description: '突き合わせ結果をカードやグラフでダッシュボードにまとめ、更新で再描画される。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-tr')
       }
     }
   }
-];;
+];
+
+// カテゴリ別にテーマを取得する関数
+export const getThemesByCategory = (category: 'information' | 'tools-rpa' | 'games'): Theme[] => {
+  return themes.filter(theme => theme.category === category);
+};
 
 // テーマIDからテーマを取得する関数
 export const getThemeById = (themeId: string): Theme | null => {
@@ -362,11 +379,6 @@ export const getThemeById = (themeId: string): Theme | null => {
     console.error('テーマ取得エラー:', error);
     return null;
   }
-};
-
-// カテゴリ別にテーマを取得する関数
-export const getThemesByCategory = (category: 'information' | 'tools-rpa' | 'games'): Theme[] => {
-  return themes.filter(theme => theme.category === category);
 };
 
 // 特定のレベルタスクを取得する関数
@@ -399,6 +411,7 @@ export const getQuadrantTask = (themeId: string, quadrant: string): QuadrantTask
 export const getTotalQuadrantTasks = (): number => {
   return themes.length * 4; // 9 themes × 4 levels = 36 tasks
 };
+
 // データ検証関数
 export const validateThemeData = (): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
@@ -489,6 +502,7 @@ export const validateHintData = (): { isValid: boolean; errors: string[] } => {
     errors
   };
 };
+
 // フォールバック用のデフォルトデータ
 const defaultTheme: Theme = {
   id: 'default',
@@ -554,6 +568,7 @@ export const getQuadrantTaskSafe = (themeId: string, quadrant: string): Quadrant
   // フォールバック
   return defaultTheme.quadrants[quadrant as keyof typeof defaultTheme.quadrants] || defaultTheme.quadrants['bottom-left'];
 };
+
 // 動的ヒント生成機能
 export const generateDynamicHint = (taskId: string, fallbackTitle: string): TaskHint => {
   // 基本的なヒントテンプレート
