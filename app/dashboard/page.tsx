@@ -154,85 +154,73 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto mb-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">課題テーマ一覧</h2>
         
-        {/* カテゴリ別セクション */}
-        {Object.entries(CATEGORY_CONFIG).map(([categoryKey, categoryConfig]) => {
-          const categoryThemes = getThemesByCategory(categoryKey as 'information' | 'tools-rpa' | 'games');
-          
-          return (
-            <div key={categoryKey} className="mb-6">
-              <div className="flex items-center space-x-2 mb-3">
-                <h3 className="text-lg font-medium text-gray-800">
-                  {categoryConfig.name}
-                </h3>
-                <span className="text-sm text-gray-500">
-                  {categoryConfig.description}
-                </span>
-              </div>
-              
-              <div className="space-y-2">
-                {categoryThemes.map((theme) => {
-                  const completedCount = ThemeStorageManager.getThemeCompletedCount(theme.id);
-                  const isCompleted = completedCount === 4;
-                  const progressPercentage = Math.round((completedCount / 4) * 100);
+        {/* 指定順序での表示 */}
+        <div className="space-y-2">
+          {themes.map((theme, index) => {
+            const completedCount = ThemeStorageManager.getThemeCompletedCount(theme.id);
+            const isCompleted = completedCount === 4;
+            const progressPercentage = Math.round((completedCount / 4) * 100);
+            
+            return (
+              <div
+                key={theme.id}
+                onClick={() => router.push(`/theme/${theme.id}`)}
+                className={`
+                  bg-white border border-gray-200 rounded-lg p-4 cursor-pointer
+                  hover:shadow-md hover:border-gray-300 transition-all duration-200
+                  ${isCompleted ? 'ring-1 ring-blue-200 bg-blue-50' : ''}
+                `}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4 flex-1">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                        {index + 1}
+                      </span>
+                      <div className="text-xl">{theme.icon}</div>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-gray-800 text-base">
+                        {theme.title}
+                      </h4>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {theme.description}
+                      </p>
+                    </div>
+                  </div>
                   
-                  return (
-                    <div
-                      key={theme.id}
-                      onClick={() => router.push(`/theme/${theme.id}`)}
-                      className={`
-                        bg-white border border-gray-200 rounded-lg p-4 cursor-pointer
-                        hover:shadow-md hover:border-gray-300 transition-all duration-200
-                        ${isCompleted ? 'ring-1 ring-blue-200 bg-blue-50' : ''}
-                      `}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4 flex-1">
-                          <div className="text-xl">{theme.icon}</div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-800 text-base">
-                              {theme.title}
-                            </h4>
-                            <p className="text-sm text-gray-600 mt-1">
-                              {theme.description}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center space-x-4">
-                          <div className="text-right">
-                                   <div className="text-sm font-medium text-gray-800">
-                                     {completedCount}/4 レベル
-                                   </div>
-                            <div className="text-xs text-gray-500">
-                              {progressPercentage}% 完了
-                            </div>
-                          </div>
-                          
-                          <div className="w-24">
-                            <div className="w-full bg-gray-200 rounded-full h-2">
-                              <div 
-                                className="bg-blue-500 h-2 rounded-full transition-all duration-500 ease-out"
-                                style={{ width: `${progressPercentage}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                          
-                          {isCompleted && (
-                            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            </div>
-                          )}
-                        </div>
+                  <div className="flex items-center space-x-4">
+                    <div className="text-right">
+                      <div className="text-sm font-medium text-gray-800">
+                        {completedCount}/4 レベル
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {progressPercentage}% 完了
                       </div>
                     </div>
-                  );
-                })}
+                    
+                    <div className="w-24">
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-blue-500 h-2 rounded-full transition-all duration-500 ease-out"
+                          style={{ width: `${progressPercentage}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    
+                    {isCompleted && (
+                      <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* クリア済み課題履歴 */}
