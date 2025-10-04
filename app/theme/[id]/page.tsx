@@ -285,6 +285,14 @@ export default function ThemeDetailPage() {
                 <p className="text-sm text-gray-500 mb-4">
                   {quadrantConfig.description}
                 </p>
+                
+                {/* 課題の詳細説明 */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">📋 実装内容</h3>
+                  <p className="text-gray-700 leading-relaxed">
+                    {task.description}
+                  </p>
+                </div>
               </div>
 
 

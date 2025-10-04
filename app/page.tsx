@@ -5,14 +5,20 @@ import { useRouter } from 'next/navigation';
 import LocalStorageManager from '@/utils/localStorage';
 
 export default function LoginPage() {
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState(''); // 明示的に空文字列で初期化
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // 既にログインしているかチェック
+  // コンポーネントマウント時に入力をクリア
   useEffect(() => {
-    const currentUser = LocalStorageManager.getCurrentUser();
-    console.log('現在のユーザー:', currentUser); // デバッグ用
+    setUserId(''); // 強制的に空にする
+  }, []);
+
+  // 既にログインしているかチェック（ローカルストレージは無視）
+  useEffect(() => {
+    // ローカルストレージのチェックを無効化
+    // const currentUser = LocalStorageManager.getCurrentUser();
+    // console.log('現在のユーザー:', currentUser); // デバッグ用
     
     // URLパラメータでクリアが指定されている場合はデータをクリア
     const urlParams = new URLSearchParams(window.location.search);
@@ -24,9 +30,10 @@ export default function LoginPage() {
       return;
     }
     
-    if (currentUser) {
-      router.push('/dashboard');
-    }
+    // 自動ログインを無効化 - 常にログイン画面を表示
+    // if (currentUser) {
+    //   router.push('/dashboard');
+    // }
   }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -156,12 +163,15 @@ export default function LoginPage() {
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck="false"
+                data-form-type="other"
+                data-lpignore="true"
                 className="w-full px-6 py-4 border border-gray-300 rounded-xl 
                            bg-white text-gray-800 placeholder-gray-500 text-lg
                            focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent
                            transition-all duration-200 shadow-sm"
                 disabled={isLoading}
                 required
+                key="login-input" // Reactの再レンダリング強制
               />
             </div>
 
