@@ -12,6 +12,18 @@ export default function LoginPage() {
   // 既にログインしているかチェック
   useEffect(() => {
     const currentUser = LocalStorageManager.getCurrentUser();
+    console.log('現在のユーザー:', currentUser); // デバッグ用
+    
+    // URLパラメータでクリアが指定されている場合はデータをクリア
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('clear') === 'true') {
+      LocalStorageManager.clearAllData();
+      console.log('ローカルストレージをクリアしました');
+      // URLからclearパラメータを削除
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+    
     if (currentUser) {
       router.push('/dashboard');
     }
@@ -140,6 +152,10 @@ export default function LoginPage() {
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
                 placeholder="お名前を入力してください"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
                 className="w-full px-6 py-4 border border-gray-300 rounded-xl 
                            bg-white text-gray-800 placeholder-gray-500 text-lg
                            focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent

@@ -122,13 +122,12 @@ export default function ThemeDetailPage() {
     } catch (error) {
       console.error('ヒント表示エラー:', error);
       // エラー時もフォールバックヒントを表示
-      setCurrentHint({ 
-        title: taskTitle, 
-        hint: {
-          tips: ['ページを再読み込みしてみてください'],
-          resources: ['サポートにお問い合わせください']
-        }
-      });
+        setCurrentHint({ 
+          title: taskTitle, 
+          hint: {
+            tips: ['ページを再読み込みしてみてください']
+          }
+        });
       setShowHintPopup(true);
     }
   };
@@ -323,7 +322,7 @@ export default function ThemeDetailPage() {
           isOpen={showHintPopup}
           onClose={handleCloseHint}
           taskTitle={currentHint.title}
-          hints={currentHint.hint as { tips: string[]; resources: string[]; }}
+            hints={currentHint.hint as { tips: string[]; }}
         />
       )}
     </div>

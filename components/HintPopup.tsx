@@ -8,7 +8,6 @@ interface HintPopupProps {
   taskTitle: string;
   hints: {
     tips: string[];
-    resources: string[];
   };
 }
 
@@ -58,21 +57,6 @@ export default function HintPopup({ isOpen, onClose, taskTitle, hints }: HintPop
                       <span className="text-green-600 text-sm font-bold">{index + 1}</span>
                     </div>
                     <p className="text-gray-700 text-sm leading-relaxed">{tip}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 参考リソース */}
-            <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                🔗 参考リソース
-              </h4>
-              <div className="space-y-2">
-                {hints.resources.map((resource, index) => (
-                  <div key={index} className="flex items-start space-x-3">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full mt-2 flex-shrink-0"></div>
-                    <p className="text-gray-700 text-sm leading-relaxed">{resource}</p>
                   </div>
                 ))}
               </div>
