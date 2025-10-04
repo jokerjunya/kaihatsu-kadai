@@ -1,103 +1,138 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import LocalStorageManager from '@/utils/localStorage';
+
+export default function LoginPage() {
+  const [userId, setUserId] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  // 既にログインしているかチェック
+  useEffect(() => {
+    const currentUser = LocalStorageManager.getCurrentUser();
+    if (currentUser) {
+      router.push('/dashboard');
+    }
+  }, [router]);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!userId.trim()) {
+      alert('ユーザーIDを入力してください');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // ユーザー情報を作成・保存
+      const user = {
+        id: userId.trim(),
+        completedTasks: []
+      };
+
+      const success = LocalStorageManager.setCurrentUser(user);
+      
+      if (success) {
+        // ダッシュボードへリダイレクト
+        router.push('/dashboard');
+      } else {
+        alert('ログインに失敗しました。再度お試しください。');
+      }
+    } catch (error) {
+      console.error('ログインエラー:', error);
+      alert('ログインに失敗しました。再度お試しください。');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="max-w-md w-full space-y-8">
+        {/* ヘッダー */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            Kadai
+          </h1>
+          <p className="text-lg text-gray-700 mb-8">
+            4レベル課題管理アプリ
+          </p>
+          <div className="space-y-2 text-sm text-gray-600">
+            <p>シンプルで効果的な課題管理で</p>
+            <p>あなたの成長をサポートします</p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* ログインフォーム */}
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div>
+            <label htmlFor="userId" className="block text-sm font-medium text-gray-800 mb-2">
+              ユーザーID
+            </label>
+            <input
+              id="userId"
+              type="text"
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              placeholder="任意のIDを入力してください"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg 
+                         bg-white text-gray-800 placeholder-gray-500
+                         focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent
+                         transition-all duration-200"
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-3 px-4 bg-yellow-400 hover:bg-yellow-500 
+                       text-gray-800 font-semibold rounded-lg
+                       transition-all duration-200 ease-in-out
+                       focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2
+                       disabled:opacity-50 disabled:cursor-not-allowed
+                       transform hover:scale-[1.02] active:scale-[0.98]"
+          >
+            {isLoading ? 'ログイン中...' : 'ログイン'}
+          </button>
+        </form>
+
+        {/* 説明文 */}
+        <div className="text-center text-sm text-gray-500 space-y-2">
+          <p>パスワードは不要です</p>
+          <p>IDを入力するだけで始められます</p>
+        </div>
+
+        {/* 4レベルの説明 */}
+        <div className="border border-gray-200 rounded-lg p-6 bg-white">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 text-center">
+            4レベルで課題を整理
+          </h3>
+          <div className="grid grid-cols-1 gap-3 text-sm">
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-yellow-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-700">レベル1: 内部単純 × 外部依存なし</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-purple-600 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-700">レベル2: 内部複雑 × 外部依存なし</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-blue-400 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-700">レベル3: 内部単純 × 外部依存あり</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-gray-600 rounded-full flex-shrink-0"></div>
+              <span className="text-gray-700">レベル4: 内部複雑 × 外部依存あり</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

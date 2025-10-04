@@ -1,26 +1,76 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Happy Hues Palette 14 Color System */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fffffe;
+  --foreground: #2d334a;
+  --primary: #272343;
+  --accent: #ffd803;
+  --button-text: #272343;
+  --muted: #bae8e8;
+  --card: #ffffff;
+  --border: #e3f6f5;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .text-primary {
+    color: #272343;
+  }
+  .bg-primary {
+    background-color: #272343;
+  }
+  .text-accent {
+    color: #ffd803;
+  }
+  .bg-accent {
+    background-color: #ffd803;
+  }
+  .text-button-text {
+    color: #272343;
+  }
+  .bg-muted {
+    background-color: #bae8e8;
+  }
+  .text-muted {
+    color: #bae8e8;
+  }
+  .bg-card {
+    background-color: #ffffff;
+  }
+  .border-custom {
+    border-color: #e3f6f5;
+  }
+}
+
+/* アニメーション定義 */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(-20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out;
 }
