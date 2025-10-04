@@ -13,28 +13,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'bill-splitter-bl',
-        title: '名前登録・均等割の結果表示',
+        title: 'レベル1',
         description: '名前を登録し、人数と合計金額を入力すると均等割の結果を表示する。',
         isCompleted: false,
         hint: getTaskHint('bill-splitter-bl')
       },
       'top-left': {
         id: 'bill-splitter-tl',
-        title: '負担割合の調整機能',
+        title: 'レベル2',
         description: '人によって負担割合を変えられる（幹事割引や飲まなかった人は少なめなど）。',
         isCompleted: false,
         hint: getTaskHint('bill-splitter-tl')
       },
       'bottom-right': {
         id: 'bill-splitter-br',
-        title: '計算結果の保存・共有機能',
+        title: 'レベル3',
         description: '計算結果を保存して、共有リンクやコードで他の人に知らせられる。',
         isCompleted: false,
         hint: getTaskHint('bill-splitter-br')
       },
       'top-right': {
         id: 'bill-splitter-tr',
-        title: '複数イベントの履歴管理',
+        title: 'レベル4',
         description: '複数イベントを登録し、割り勘履歴をまとめて一覧化する。',
         isCompleted: false,
         hint: getTaskHint('bill-splitter-tr')
@@ -52,28 +52,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'othello-game-bl',
-        title: '2人対戦・石をひっくり返す処理',
+        title: 'レベル1',
         description: '2人で交互に石を置いて遊べる盤面。石をひっくり返す処理を含む。',
         isCompleted: false,
         hint: getTaskHint('othello-game-bl')
       },
       'top-left': {
         id: 'othello-game-tl',
-        title: '1人用AI対戦機能',
+        title: 'レベル2',
         description: '1人でも遊べるように、相手の動きを追加する。',
         isCompleted: false,
         hint: getTaskHint('othello-game-tl')
       },
       'bottom-right': {
         id: 'othello-game-br',
-        title: '対局結果の保存・一覧表示',
+        title: 'レベル3',
         description: '対局の結果を保存し、勝敗やスコアを一覧表示できる。',
         isCompleted: false,
         hint: getTaskHint('othello-game-br')
       },
       'top-right': {
         id: 'othello-game-tr',
-        title: 'ネット対戦機能',
+        title: 'レベル4',
         description: '遠隔の相手とネット越しに2人で対戦できる。',
         isCompleted: false,
         hint: getTaskHint('othello-game-tr')
@@ -91,28 +91,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'file-organizer-bl',
-        title: 'ファイル種類別自動分類',
+        title: 'レベル1',
         description: 'フォルダ内のファイルを種類ごとに自動で分類する。',
         isCompleted: false,
         hint: getTaskHint('file-organizer-bl')
       },
       'top-left': {
         id: 'file-organizer-tl',
-        title: '分類条件の拡張（サイズ・日付）',
+        title: 'レベル2',
         description: '分類条件に大きさや作成日を加えられるようにする。',
         isCompleted: false,
         hint: getTaskHint('file-organizer-tl')
       },
       'bottom-right': {
         id: 'file-organizer-br',
-        title: '外部サービス連携・送信機能',
+        title: 'レベル3',
         description: '整理したファイルを外のサービスに送れるようにする。',
         isCompleted: false,
         hint: getTaskHint('file-organizer-br')
       },
       'top-right': {
         id: 'file-organizer-tr',
-        title: '複数場所での同期機能',
+        title: 'レベル4',
         description: '複数の場所で同じルールを使い、整理結果を同期できる。',
         isCompleted: false,
         hint: getTaskHint('file-organizer-tr')
@@ -130,28 +130,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'calendar-todo-bl',
-        title: 'タスク追加・削除・完了チェック',
+        title: 'レベル1',
         description: 'タスクを追加・削除できるリスト。完了したものにはチェックを付けられる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-bl')
       },
       'top-left': {
         id: 'calendar-todo-tl',
-        title: '期限・優先度設定・並べ替え',
+        title: 'レベル2',
         description: 'タスクに期限や優先度を設定でき、並べ替えや強調表示もできる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-tl')
       },
       'bottom-right': {
         id: 'calendar-todo-br',
-        title: 'スケジュール連携・予定表登録',
+        title: 'レベル3',
         description: 'タスクが予定表に登録され、スケジュールとつながる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-br')
       },
       'top-right': {
         id: 'calendar-todo-tr',
-        title: '習慣タスク・通知・リマインド',
+        title: 'レベル4',
         description: '習慣タスクを登録し、連続達成数を表示。通知でリマインドもできる。',
         isCompleted: false,
         hint: getTaskHint('calendar-todo-tr')
@@ -169,28 +169,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'web-scraping-rpa-bl',
-        title: '指定サイト検索・結果一覧表示',
+        title: 'レベル1',
         description: 'ボタンを押すと指定サイトで検索を実行し、結果を一覧で表示する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-bl')
       },
       'top-left': {
         id: 'web-scraping-rpa-tl',
-        title: '複数要素の抽出・分別表示',
+        title: 'レベル2',
         description: '結果の中からタイトルや内容など、複数の要素を取り出して別々に表示する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-tl')
       },
       'bottom-right': {
         id: 'web-scraping-rpa-br',
-        title: '複数サイト・複数検索語の一括処理',
+        title: 'レベル3',
         description: '複数のサイトで複数の検索語を実行し、結果をまとめて一覧表示する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-br')
       },
       'top-right': {
         id: 'web-scraping-rpa-tr',
-        title: '要約ビュー生成・テンプレート化',
+        title: 'レベル4',
         description: '取得した情報をもとに、要点をまとめたページ（要約ビュー）を生成する。',
         isCompleted: false,
         hint: getTaskHint('web-scraping-rpa-tr')
@@ -208,28 +208,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'weather-app-bl',
-        title: 'ダミー天気データの表示',
+        title: 'レベル1',
         description: 'ダミーの「今日の天気」を画面に表示する。',
         isCompleted: false,
         hint: getTaskHint('weather-app-bl')
       },
       'top-left': {
         id: 'weather-app-tl',
-        title: '時間別気温推移の表示',
+        title: 'レベル2',
         description: 'ダミーの気温推移を時間ごとに表示し、1日の流れを見せる。',
         isCompleted: false,
         hint: getTaskHint('weather-app-tl')
       },
       'bottom-right': {
         id: 'weather-app-br',
-        title: '場所指定・実際の天気取得',
+        title: 'レベル3',
         description: '場所を入力すると、その場所の実際の天気が表示される。',
         isCompleted: false,
         hint: getTaskHint('weather-app-br')
       },
       'top-right': {
         id: 'weather-app-tr',
-        title: '履歴・週間予報・注意喚起',
+        title: 'レベル4',
         description: '過去の天気を履歴に残し、週間予報や注意喚起も表示する。',
         isCompleted: false,
         hint: getTaskHint('weather-app-tr')
@@ -247,28 +247,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'news-viewer-bl',
-        title: 'ダミー記事3件・更新ボタン',
+        title: 'レベル1',
         description: 'ダミーの記事3件をタイトル・要約・リンク付きで表示。更新ボタンで切り替えられる。',
         isCompleted: false,
         hint: getTaskHint('news-viewer-bl')
       },
       'top-left': {
         id: 'news-viewer-tl',
-        title: 'お気に入り機能・あとで読むリスト',
+        title: 'レベル2',
         description: '記事をお気に入りに追加して「あとで読むリスト」にまとめられる。',
         isCompleted: false,
         hint: getTaskHint('news-viewer-tl')
       },
       'bottom-right': {
         id: 'news-viewer-br',
-        title: '検索機能・実際の記事取得',
+        title: 'レベル3',
         description: '検索キーワードを入力すると、実際のウェブ上の記事が取得され一覧表示される。',
         isCompleted: false,
         hint: getTaskHint('news-viewer-br')
       },
       'top-right': {
         id: 'news-viewer-tr',
-        title: '記事保存・履歴・まとめ読み',
+        title: 'レベル4',
         description: '記事を保存して履歴に残し、まとめて読む画面で再確認できる。',
         isCompleted: false,
         hint: getTaskHint('news-viewer-tr')
@@ -286,28 +286,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'manager-dashboard-bl',
-        title: '数値の表形式表示',
+        title: 'レベル1',
         description: '数値を表に表示する（売上、コストなど）。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-bl')
       },
       'top-left': {
         id: 'manager-dashboard-tl',
-        title: 'グラフ切り替え表示機能',
+        title: 'レベル2',
         description: '指標ごとにグラフに切り替えて表示できる。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-tl')
       },
       'bottom-right': {
         id: 'manager-dashboard-br',
-        title: '複数データの比較機能',
+        title: 'レベル3',
         description: '複数の数値表を読み込み、同じ指標を比較できる。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-br')
       },
       'top-right': {
         id: 'manager-dashboard-tr',
-        title: '統合ダッシュボード・自動更新',
+        title: 'レベル4',
         description: '複数の指標をまとめて配置したダッシュボードを作り、更新で全体が最新になる。',
         isCompleted: false,
         hint: getTaskHint('manager-dashboard-tr')
@@ -325,28 +325,28 @@ export const themes: Theme[] = [
     quadrants: {
       'bottom-left': {
         id: 'excel-automation-bl',
-        title: 'データ読み込み・一覧表示',
+        title: 'レベル1',
         description: '表のデータを読み込み、そのまま画面に一覧表示できる。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-bl')
       },
       'top-left': {
         id: 'excel-automation-tl',
-        title: '条件指定・色付け・集計機能',
+        title: 'レベル2',
         description: '条件を決めて色付けや集計を行い、要点を強調した一覧にする。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-tl')
       },
       'bottom-right': {
         id: 'excel-automation-br',
-        title: '複数表の突き合わせ処理',
+        title: 'レベル3',
         description: '複数の表を読み込み、共通項目で突き合わせて結果を出す。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-br')
       },
       'top-right': {
         id: 'excel-automation-tr',
-        title: 'ダッシュボード化・自動再描画',
+        title: 'レベル4',
         description: '突き合わせ結果をカードやグラフでダッシュボードにまとめ、更新で再描画される。',
         isCompleted: false,
         hint: getTaskHint('excel-automation-tr')
