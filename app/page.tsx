@@ -158,7 +158,7 @@ export default function LoginPage() {
                 type="text"
                 value={userId}
                 onChange={(e) => setUserId(e.target.value)}
-                placeholder="お名前を入力してください"
+                placeholder="本名以外の、数字やニックネームでを入力してください。"
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
@@ -173,6 +173,9 @@ export default function LoginPage() {
                 required
                 key="login-input" // Reactの再レンダリング強制
               />
+              <p className="mt-2 text-xs text-gray-500 text-center">
+                ※進捗の記録のためだけに用います
+              </p>
             </div>
 
             <button
